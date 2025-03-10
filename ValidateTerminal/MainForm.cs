@@ -228,7 +228,7 @@ namespace ValidateTerminal
             UpdateStatus("Запрос выполняется", Color.Yellow);
 
             string dateTo = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-            string apiUrl = $"https://api.vendista.ru:99/terminals/owner_change_report?TerminalId={terminalId}&token={token}&DateFrom=2024-01-01T00:00:00.649Z&DateTo={dateTo}";
+            string apiUrl = $"https://api.vendista.ru:99/terminals/owner_change_report?TerminalIds={terminalId}&token={token}&DateFrom=2024-01-01T00:00:00.649Z&DateTo={dateTo}";
             using (HttpClient client = new HttpClient())
             {
                 try
