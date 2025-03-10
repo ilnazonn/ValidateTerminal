@@ -71,8 +71,8 @@ namespace ValidateTerminal
                     await Task.Delay(500);
 
                     // Создание экземпляра MainForm, передавая токен
-                    MainForm mainForm = new MainForm(token); // Передаем токен в конструктор
-                    mainForm.Show(); // Показываем новую форму
+                    ChooseFunctional functionalForm = new ChooseFunctional(token); // Передаем токен в конструктор
+                    functionalForm.Show(); // Показываем новую форму
                     this.Hide(); // Скрываем текущую форму
                 }
                 catch (Exception ex)

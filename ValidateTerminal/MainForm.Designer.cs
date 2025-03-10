@@ -38,6 +38,7 @@
             lblStatus = new Label();
             btnGo = new Button();
             lblDebug = new Label();
+            btnBack = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridViewResults).BeginInit();
             SuspendLayout();
             // 
@@ -135,11 +136,22 @@
             lblDebug.Size = new Size(0, 15);
             lblDebug.TabIndex = 9;
             // 
+            // btnBack
+            // 
+            btnBack.Location = new Point(0, 410);
+            btnBack.Name = "btnBack";
+            btnBack.Size = new Size(75, 23);
+            btnBack.TabIndex = 10;
+            btnBack.Text = "Назад";
+            btnBack.UseVisualStyleBackColor = true;
+            btnBack.Click += btnBack_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1239, 663);
+            ClientSize = new Size(1109, 593);
+            Controls.Add(btnBack);
             Controls.Add(lblDebug);
             Controls.Add(btnGo);
             Controls.Add(lblStatus);
@@ -170,5 +182,6 @@
         private Label lblStatus;
         private Button btnGo;
         private Label lblDebug;
+        private Button btnBack;
     }
 }
