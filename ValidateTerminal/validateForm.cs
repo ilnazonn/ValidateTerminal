@@ -15,9 +15,10 @@ namespace ValidateTerminal
     public partial class validateForm : Form
     {
 public validateForm()
-{
-    InitializeComponent();
-    this.Load += Form1_Load; // Можно использовать метод без new EventHandler для сокращения
+        {
+            InitializeComponent();
+            Console.WriteLine("Приложение завершает работу...");
+            this.Load += Form1_Load; // Можно использовать метод без new EventHandler для сокращения
     // Подписываемся на событие закрытия формы
     ApplicationManager.SubscribeToFormClosing(this);
 }
@@ -75,6 +76,7 @@ public validateForm()
                     // Создание экземпляра MainForm, передавая токен
                     ChooseFunctional functionalForm = new ChooseFunctional(token); // Передаем токен в конструктор
                     functionalForm.Show(); // Показываем новую форму
+
                     this.Hide(); // Скрываем текущую форму
                 }
                 catch (Exception ex)

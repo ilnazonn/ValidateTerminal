@@ -18,13 +18,6 @@ namespace ValidateTerminal
     {
         private string? token;
 
-        public MainForm()
-        {
-            InitializeComponent();
-            btnGo.Enabled = false; // Initially disabled
-            // Подписываемся на событие закрытия формы
-            ApplicationManager.SubscribeToFormClosing(this);
-        }
 
         private void txtList_TextChanged(object sender, EventArgs e)
         {
@@ -112,6 +105,7 @@ namespace ValidateTerminal
             token = apiToken ?? throw new ArgumentNullException(nameof(apiToken));
             btnGo.Enabled = false; // Initially disabled
             InitializeMainDataTable(); // Инициализация основного DataTable
+            ApplicationManager.SubscribeToFormClosing(this);
         }
 
         private DataTable mainDataTable = new DataTable();

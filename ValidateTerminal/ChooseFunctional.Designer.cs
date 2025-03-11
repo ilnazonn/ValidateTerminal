@@ -8,6 +8,7 @@
             InitializeComponent(); // Инициализация компонентов формы
 
             this.token = token; // Сохраняем токен
+            ApplicationManager.SubscribeToFormClosing(this);
         }
         /// <summary>
         /// Required designer variable.

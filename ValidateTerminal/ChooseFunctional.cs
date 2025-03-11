@@ -13,26 +13,19 @@ namespace ValidateTerminal
 {
     public partial class ChooseFunctional : Form
     {
-        public ChooseFunctional()
-        {
-            InitializeComponent();
-            // Подписываемся на событие закрытия формы
-            ApplicationManager.SubscribeToFormClosing(this);
-
-        }
 
         private void btnCheckTerminals_Click(object sender, EventArgs e)
         {
             MainForm mainForm = new MainForm(token); // Передаем токен в конструктор
             mainForm.Show(); // Показываем новую форму
-            this.Close(); // Закрываем текущую форму
+            this.Hide(); // Закрываем текущую форму
         }
 
         private void btnCheckTicket_Click(object sender, EventArgs e)
         {
             checkTickets checkTicketsForm = new checkTickets(token);  // Предположим, что token был объявлен в ChooseFunctional
             checkTicketsForm.Show(); // Показываем новую форму
-            this.Close(); // Закрываем текущую форму
+            this.Hide(); // Закрываем текущую форму
         }
     }
 }
