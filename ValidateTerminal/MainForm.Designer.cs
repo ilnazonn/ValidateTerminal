@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             label1 = new Label();
             txtList = new TextBox();
             btnSubmit = new Button();
@@ -80,7 +81,7 @@
             dataGridViewResults.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewResults.Location = new Point(329, 0);
             dataGridViewResults.Name = "dataGridViewResults";
-            dataGridViewResults.Size = new Size(910, 663);
+            dataGridViewResults.Size = new Size(778, 593);
             dataGridViewResults.TabIndex = 3;
             // 
             // lblCount
@@ -150,6 +151,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.ActiveCaption;
             ClientSize = new Size(1109, 593);
             Controls.Add(btnBack);
             Controls.Add(lblDebug);
@@ -162,6 +164,7 @@
             Controls.Add(btnSubmit);
             Controls.Add(txtList);
             Controls.Add(label1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MainForm";
             Text = "Валидация терминалов";
             Load += MainForm_Load;

@@ -15,19 +15,27 @@ namespace ValidateTerminal
         {
             InitializeComponent();
             this.token = token;
+            // Подписываемся на событие закрытия формы
+            ApplicationManager.SubscribeToFormClosing(this);
 
             // Инициализация webBrowserList
             webBrowserList = new WebBrowser();
             webBrowserList.Dock = DockStyle.Fill; // Растягиваем на всю форму
             this.Controls.Add(webBrowserList); // Добавляем на форму
-                                               // Подписываемся на событие изменения состояния чекбокса
+
+         // Подписываемся на событие изменения состояния чекбокса
             hideClosedCheckBox.CheckedChanged += HideClosedCheckBox_CheckedChanged;
         }
-        private void HideClosedCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void HideClosedCheckBox_CheckedChanged(object? sender, EventArgs e)
         {
+            if (sender == null)
+                return;
             // При изменении состояния чекбокса перестраиваем таблицу
             btnApply_Click(sender, e);
         }
+
+
+
         private async void btnApply_Click(object sender, EventArgs e)
         {
             statusInfo.Visible = true;
@@ -42,8 +50,8 @@ namespace ValidateTerminal
             if (links.Length == 0)
             {
                 MessageBox.Show("Ошибка: Введите ссылки на тикеты.");
-                return;
                 statusInfo.Visible = false;
+                return;
             }
 
             // Обновляем статус
@@ -78,7 +86,7 @@ namespace ValidateTerminal
         <table class='table table-bordered table-striped'>
             <thead>
                 <tr>
-                    <th>Ссылка на тикет</th>
+                    <th>Тема</th>
                     <th>Дата создания</th>
                     <th>Дата закрытия</th>
                     <th>Дней до закрытия</th>
@@ -155,7 +163,7 @@ namespace ValidateTerminal
             webBrowserList.DocumentText = htmlContent.ToString();
         }
 
-        private async Task<dynamic> GetTicketInfoAsync(int ticketId)
+        private async Task<dynamic?> GetTicketInfoAsync(int ticketId)
         {
             using (var client = new HttpClient())
             {
@@ -172,7 +180,7 @@ namespace ValidateTerminal
             return null;
         }
 
-        private async Task<dynamic> GetCommentsAsync(int ticketId)
+        private async Task<dynamic?> GetCommentsAsync(int ticketId)
         {
             using (var client = new HttpClient())
             {
@@ -193,7 +201,7 @@ namespace ValidateTerminal
         {
             var createTime = ticketInfo.item.create_time;
             var closeTime = ticketInfo.item.close_time;
-
+            var subject = ticketInfo.item.subject; // Извлекаем тему запроса
             var lastComment = comments.items.Count > 0 ? comments.items[comments.items.Count - 1] : null;
 
             var createDate = DateTime.Parse(createTime.ToString());
@@ -220,20 +228,35 @@ namespace ValidateTerminal
                     cellColor = "background-color: #FFCCCB;"; // Красный
                 }
             }
+            // Проверяем текст последнего комментария
+            if (lastComment?.comment != null)
+            {
+                string commentText = lastComment.comment.ToString();
+                if (commentText.Contains("Заявка закрылась автоматически так как не было ответа от клиента в течении 15 дней"))
+                {
+                    daysToClose = "Тикет закрыт"; // Переопределяем значение
+                }
+            }
 
             var daysToResolve = "-";
-            if (createTime != null && closeTime != null)
+            if (createTime != null && closeTime != null) // Проверяем на null
             {
-                var resolveDate = DateTime.Parse(closeTime.ToString());
-                daysToResolve = (resolveDate - createDate).Days.ToString();
+                // Объявляем resolveDate как DateTime и используем TryParse
+                if (DateTime.TryParse(closeTime?.ToString(), out DateTime resolveDate)) // Используем ?. для проверки на null
+                {
+                    daysToResolve = (resolveDate - createDate).Days.ToString();
+                }
             }
+
+
+
 
             var commentFrom = lastComment != null ? lastComment.user_name.ToString() : "-";
 
             // Формируем строку таблицы
             return $@"
 <tr>
-    <td><a href='{link}' target='_blank'>{link}</a></td>
+    <td><a href='{link}' target='_blank'>{subject}</a></td> <!-- Тема с ссылкой -->
     <td>{createDate:dd.MM.yyyy HH:mm:ss}</td>
     <td>{(closeTime != null ? DateTime.Parse(closeTime.ToString()).ToString("dd.MM.yyyy HH:mm:ss") : "-")}</td>
     <td style='{cellColor}'>{daysToClose}</td>

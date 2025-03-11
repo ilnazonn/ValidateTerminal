@@ -35,13 +35,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChooseFunctional));
             btnCheckTerminals = new Button();
             btnCheckTicket = new Button();
             SuspendLayout();
             // 
             // btnCheckTerminals
             // 
-            btnCheckTerminals.Location = new Point(25, 24);
+            btnCheckTerminals.Location = new Point(420, 237);
             btnCheckTerminals.Name = "btnCheckTerminals";
             btnCheckTerminals.Size = new Size(153, 23);
             btnCheckTerminals.TabIndex = 0;
@@ -51,7 +52,7 @@
             // 
             // btnCheckTicket
             // 
-            btnCheckTicket.Location = new Point(25, 60);
+            btnCheckTicket.Location = new Point(420, 273);
             btnCheckTicket.Name = "btnCheckTicket";
             btnCheckTicket.Size = new Size(153, 23);
             btnCheckTicket.TabIndex = 1;
@@ -63,11 +64,13 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.ActiveCaption;
             ClientSize = new Size(1109, 593);
             Controls.Add(btnCheckTicket);
             Controls.Add(btnCheckTerminals);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "ChooseFunctional";
-            Text = "ChooseFunctional";
+            Text = "Выбор функциональности";
             ResumeLayout(false);
         }
 

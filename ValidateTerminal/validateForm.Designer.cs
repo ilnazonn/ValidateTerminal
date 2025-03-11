@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(validateForm));
             txtLogin = new TextBox();
             txtPassword = new TextBox();
             btnLogin = new Button();
@@ -39,14 +40,14 @@
             // 
             // txtLogin
             // 
-            txtLogin.Location = new Point(263, 68);
+            txtLogin.Location = new Point(443, 195);
             txtLogin.Name = "txtLogin";
             txtLogin.Size = new Size(100, 23);
             txtLogin.TabIndex = 0;
             // 
             // txtPassword
             // 
-            txtPassword.Location = new Point(263, 117);
+            txtPassword.Location = new Point(443, 244);
             txtPassword.Name = "txtPassword";
             txtPassword.Size = new Size(100, 23);
             txtPassword.TabIndex = 1;
@@ -55,7 +56,7 @@
             // 
             // btnLogin
             // 
-            btnLogin.Location = new Point(274, 166);
+            btnLogin.Location = new Point(454, 293);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(75, 23);
             btnLogin.TabIndex = 2;
@@ -66,7 +67,7 @@
             // status
             // 
             status.AutoSize = true;
-            status.Location = new Point(263, 31);
+            status.Location = new Point(443, 158);
             status.Name = "status";
             status.Size = new Size(0, 15);
             status.TabIndex = 3;
@@ -74,7 +75,7 @@
             // rememberMe
             // 
             rememberMe.AutoSize = true;
-            rememberMe.Location = new Point(265, 144);
+            rememberMe.Location = new Point(445, 271);
             rememberMe.Name = "rememberMe";
             rememberMe.Size = new Size(123, 19);
             rememberMe.TabIndex = 4;
@@ -84,7 +85,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(289, 50);
+            label1.Location = new Point(469, 177);
             label1.Name = "label1";
             label1.Size = new Size(41, 15);
             label1.TabIndex = 5;
@@ -93,7 +94,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(289, 99);
+            label2.Location = new Point(469, 226);
             label2.Name = "label2";
             label2.Size = new Size(49, 15);
             label2.TabIndex = 6;
@@ -103,6 +104,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.ActiveCaption;
             ClientSize = new Size(1109, 593);
             Controls.Add(label2);
             Controls.Add(label1);
@@ -111,8 +113,10 @@
             Controls.Add(btnLogin);
             Controls.Add(txtPassword);
             Controls.Add(txtLogin);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "validateForm";
-            Text = "Валидация терминалов";
+            Text = "Авторизация";
             ResumeLayout(false);
             PerformLayout();
         }

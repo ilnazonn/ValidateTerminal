@@ -16,12 +16,14 @@ namespace ValidateTerminal
 {
     public partial class MainForm : Form
     {
-        private string token;
+        private string? token;
 
         public MainForm()
         {
             InitializeComponent();
             btnGo.Enabled = false; // Initially disabled
+            // Подписываемся на событие закрытия формы
+            ApplicationManager.SubscribeToFormClosing(this);
         }
 
         private void txtList_TextChanged(object sender, EventArgs e)
@@ -289,7 +291,7 @@ namespace ValidateTerminal
                 }
                 catch (Exception ex)
                 {
-                    //MessageBox.Show($"Произошла ошибка: {ex.Message}");
+                    MessageBox.Show($"Произошла ошибка: {ex.Message}");
                 }
                 finally
                 {
@@ -352,7 +354,7 @@ namespace ValidateTerminal
                 }
                 catch (Exception ex)
                 {
-                    //MessageBox.Show($"Ошибка при получении имени пользователя: {ex.Message}");
+                    MessageBox.Show($"Ошибка при получении имени пользователя: {ex.Message}");
                     return "Ошибка";
                 }
             }
@@ -367,7 +369,7 @@ namespace ValidateTerminal
         {
             ChooseFunctional functionalForm = new ChooseFunctional(token); // Передаем токен в конструктор
             functionalForm.Show(); // Показываем новую форму
-            this.Hide(); // Скрываем текущую форму
+            this.Close(); // Закрываем текущую форму
         }
     }
 }

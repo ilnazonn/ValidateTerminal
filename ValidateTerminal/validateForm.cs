@@ -14,11 +14,13 @@ namespace ValidateTerminal
 {
     public partial class validateForm : Form
     {
-        public validateForm()
-        {
-            InitializeComponent();
-            this.Load += new EventHandler(Form1_Load);
-        }
+public validateForm()
+{
+    InitializeComponent();
+    this.Load += Form1_Load; // Можно использовать метод без new EventHandler для сокращения
+    // Подписываемся на событие закрытия формы
+    ApplicationManager.SubscribeToFormClosing(this);
+}
 
         private async void btnLogin_Click(object sender, EventArgs e)
         {
@@ -39,7 +41,7 @@ namespace ValidateTerminal
 
                     // Парсим JSON и извлекаем токен
                     var jsonObject = JObject.Parse(json);
-                    string token = jsonObject["token"]?.ToString(); // Получаем значение токена
+                    string? token = jsonObject["token"]?.ToString(); // Получаем значение токена
 
                     if (string.IsNullOrEmpty(token))
                     {
@@ -82,19 +84,31 @@ namespace ValidateTerminal
                 }
             }
         }
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form1_Load(object? sender, EventArgs e)
         {
             // Проверяем, установлена ли опция "Запомнить меня"
-            if (Properties.Settings.Default.RememberMe)
+            if (Properties.Settings.Default.RememberMe) // Убедитесь, что это свойство существует в ваших настройках
             {
                 // Заполняем текстовые поля логина и пароля сохранёнными значениями
-                txtLogin.Text = Properties.Settings.Default.Login;
-                txtPassword.Text = Properties.Settings.Default.Password;
+                var savedLogin = Properties.Settings.Default.Login;
+                var savedPassword = Properties.Settings.Default.Password;
+
+                // Проверяем на null перед присвоением
+                if (savedLogin != null)
+                {
+                    txtLogin.Text = savedLogin; // Заполнение текстового поля логина
+                }
+
+                if (savedPassword != null)
+                {
+                    txtPassword.Text = savedPassword; // Заполнение текстового поля пароля
+                }
 
                 // Устанавливаем чекбокс "Запомнить меня" в состояние "проверено"
                 rememberMe.Checked = true;
             }
         }
+
 
         private void txtPassword_KeyDown(object sender, KeyEventArgs e)
         {

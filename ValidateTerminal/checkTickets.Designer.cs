@@ -26,6 +26,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(checkTickets));
             textBoxLinks = new TextBox();
             btnApply = new Button();
             statusInfo = new Label();
@@ -74,7 +75,8 @@
             // 
             // btnback
             // 
-            btnback.Location = new Point(241, 10);
+            btnback.BackgroundImageLayout = ImageLayout.None;
+            btnback.Location = new Point(250, 9);
             btnback.Name = "btnback";
             btnback.Size = new Size(75, 23);
             btnback.TabIndex = 4;
@@ -84,7 +86,7 @@
             // 
             // btnOpenList
             // 
-            btnOpenList.Location = new Point(322, 9);
+            btnOpenList.Location = new Point(336, 9);
             btnOpenList.Name = "btnOpenList";
             btnOpenList.Size = new Size(156, 23);
             btnOpenList.TabIndex = 5;
@@ -108,12 +110,14 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.ActiveCaption;
             ClientSize = new Size(1109, 593);
             Controls.Add(panel1);
             Controls.Add(btnApply);
             Controls.Add(textBoxLinks);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "checkTickets";
-            Text = "checkTickets";
+            Text = "Проверка тикетов";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);
