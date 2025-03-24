@@ -363,7 +363,7 @@ namespace ValidateTerminal
         {
             ChooseFunctional functionalForm = new ChooseFunctional(token); // Передаем токен в конструктор
             functionalForm.Show(); // Показываем новую форму
-            this.Close(); // Закрываем текущую форму
+            this.Hide(); // Закрываем текущую форму
         }
     }
 }

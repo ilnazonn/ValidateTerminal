@@ -10,11 +10,16 @@ namespace ValidateTerminal
     {
         private string token;
         private WebBrowser webBrowserList; // Объявляем элемент управления
-
+        private DateTime lastCommentCreateTime;
+        private System.Windows.Forms.Timer trackingTimer;
+        private Dictionary<int, DateTime> lastCommentTimes = new Dictionary<int, DateTime>();
         public checkTickets(string token)
         {
             InitializeComponent();
             this.token = token;
+            trackingTimer = new System.Windows.Forms.Timer();
+            trackingTimer.Tick += TrackingTimer_Tick;
+            interval.Text = "5"; // Установка значения по умолчанию
             // Подписываемся на событие закрытия формы
             ApplicationManager.SubscribeToFormClosing(this);
 
@@ -23,7 +28,7 @@ namespace ValidateTerminal
             webBrowserList.Dock = DockStyle.Fill; // Растягиваем на всю форму
             this.Controls.Add(webBrowserList); // Добавляем на форму
 
-         // Подписываемся на событие изменения состояния чекбокса
+            // Подписываемся на событие изменения состояния чекбокса
             hideClosedCheckBox.CheckedChanged += HideClosedCheckBox_CheckedChanged;
         }
         private void HideClosedCheckBox_CheckedChanged(object? sender, EventArgs e)
@@ -133,6 +138,13 @@ namespace ValidateTerminal
                     MessageBox.Show($"Ошибка: Не удалось получить комментарии для тикета - {link}");
                     continue;
                 }
+                // Сохраняем время последнего комментария
+                if (comments.items.Count > 0)
+                {
+                    var lastComment = comments.items[comments.items.Count - 1];
+                    var currentCommentCreateTime = DateTime.Parse(lastComment.create_time.ToString());
+                    lastCommentTimes[id] = currentCommentCreateTime;
+                }
 
                 // Обрабатываем данные и добавляем их в HTML-таблицу
                 var ticketRow = ProcessTicketData(ticketInfo, comments, link);
@@ -142,6 +154,7 @@ namespace ValidateTerminal
                 {
                     continue; // Пропускаем закрытые тикеты
                 }
+
 
                 htmlContent.Append(ticketRow);
             }
@@ -278,7 +291,127 @@ namespace ValidateTerminal
             ChooseFunctional functionalForm = new ChooseFunctional(token); // Передаем токен в конструктор
             functionalForm.Show(); // Показываем новую форму
             this.Hide(); // Скрываем текущую форму
-        
+
         }
+
+        private async Task UpdateLastCommentTimes()
+        {
+            var links = textBoxLinks.Text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var link in links)
+            {
+                var ticketId = link.Trim().Split('/').Last();
+
+                if (int.TryParse(ticketId, out int id))
+                {
+                    var comments = await GetCommentsAsync(id);
+                    if (comments != null && comments.items.Count > 0)
+                    {
+                        var lastComment = comments.items[comments.items.Count - 1];
+                        var currentCommentCreateTime = DateTime.Parse(lastComment.create_time.ToString());
+                        lastCommentTimes[id] = currentCommentCreateTime;
+                    }
+                }
+            }
+        }
+
+        private async void chkTracking_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkTracking.Checked)
+            {
+                if (webBrowserList.DocumentText == string.Empty)
+                {
+                    MessageBox.Show("Сначала постройте таблицу тикетов.");
+                    chkTracking.Checked = false;
+                    return;
+                }
+
+                // Обновляем время последнего комментария
+                await UpdateLastCommentTimes();
+
+                if (int.TryParse(interval.Text, out int intervalMinutes))
+                {
+                    trackingTimer.Interval = intervalMinutes * 60 * 1000; // Переводим минуты в миллисекунды
+                    trackingTimer.Start();
+                }
+                else
+                {
+                    MessageBox.Show("Некорректное значение интервала.");
+                    chkTracking.Checked = false;
+                }
+            }
+            else
+            {
+                trackingTimer.Stop();
+            }
+        }
+
+        private void interval_TextChanged(object sender, EventArgs e)
+        {
+            if (int.TryParse(interval.Text, out int intervalMinutes))
+            {
+                trackingTimer.Interval = intervalMinutes * 60 * 1000; // Переводим минуты в миллисекунды
+            }
+        }
+
+        private void ShowNotification(string message)
+        {
+            var notification = new NotifyIcon
+            {
+                Visible = true,
+                Icon = SystemIcons.Information,
+                BalloonTipText = message,
+                BalloonTipTitle = "Изменение комментария"
+            };
+
+            notification.ShowBalloonTip(5000); // Показываем уведомление на 5 секунд
+        }
+
+private async void TrackingTimer_Tick(object sender, EventArgs e)
+{
+    var links = textBoxLinks.Text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+    foreach (var link in links)
+    {
+        var ticketId = link.Trim().Split('/').Last();
+
+        if (int.TryParse(ticketId, out int id))
+        {
+            // Получаем актуальные комментарии из API
+            var comments = await GetCommentsAsync(id);
+            if (comments != null && comments.items.Count > 0)
+            {
+                var lastComment = comments.items[comments.items.Count - 1];
+                var currentCommentCreateTime = DateTime.Parse(lastComment.create_time.ToString());
+
+                // Проверяем, есть ли запись о времени последнего комментария для этого тикета
+                if (lastCommentTimes.ContainsKey(id))
+                {
+                    // Если время последнего комментария изменилось
+                    if (currentCommentCreateTime > lastCommentTimes[id])
+                    {
+                        // Обновляем время последнего комментария
+                        lastCommentTimes[id] = currentCommentCreateTime;
+
+                        // Показываем уведомление
+                        ShowNotification($"Комментарий в задаче {id} был изменен.");
+                        System.Media.SystemSounds.Beep.Play(); // Звуковое уведомление
+
+                        // Обновляем таблицу (опционально)
+                        btnApply_Click(null, null);
+                    }
+                }
+                else
+                {
+                    // Если это первый раз, сохраняем время последнего комментария
+                    lastCommentTimes[id] = currentCommentCreateTime;
+                }
+            }
+        }
+    }
+}
+
+
+
     }
 }

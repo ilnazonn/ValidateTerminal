@@ -34,6 +34,8 @@
             btnback = new Button();
             btnOpenList = new Button();
             panel1 = new Panel();
+            chkTracking = new CheckBox();
+            interval = new TextBox();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -96,6 +98,8 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(interval);
+            panel1.Controls.Add(chkTracking);
             panel1.Controls.Add(statusInfo);
             panel1.Controls.Add(btnOpenList);
             panel1.Controls.Add(hideClosedCheckBox);
@@ -105,6 +109,24 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1109, 39);
             panel1.TabIndex = 6;
+            // 
+            // chkTracking
+            // 
+            chkTracking.AutoSize = true;
+            chkTracking.Location = new Point(498, 9);
+            chkTracking.Name = "chkTracking";
+            chkTracking.Size = new Size(163, 19);
+            chkTracking.TabIndex = 6;
+            chkTracking.Text = "Включить отслеживание";
+            chkTracking.UseVisualStyleBackColor = true;
+            // 
+            // interval
+            // 
+            interval.Enabled = false;
+            interval.Location = new Point(658, 7);
+            interval.Name = "interval";
+            interval.Size = new Size(48, 23);
+            interval.TabIndex = 7;
             // 
             // checkTickets
             // 
@@ -133,5 +155,7 @@
         private Button btnback;
         private Button btnOpenList;
         private Panel panel1;
+        private CheckBox chkTracking;
+        private TextBox interval;
     }
 }
